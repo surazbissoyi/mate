@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.cl-internal-16vtwdp, .cl-internal-1hp5nqm, .cl-internal-df7v37, .cl-internal-1dauvpw, .cl-internal-piyvrh {
+    display: none !important;
+}
+
+body {
+    background: linear-gradient(to right, #2C3E50, #4CA1AF); 
+}
