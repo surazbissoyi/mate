@@ -1,7 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useUser } from '@clerk/clerk-react';
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -18,6 +19,7 @@ const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
 const AddProperty = () => {
+    const { isLoaded, user } = useUser(); // Clerk auth hook
     const [property, setProperty] = useState({
         name: '',
         occupancy: 1,
@@ -39,18 +41,52 @@ const AddProperty = () => {
     });
 
     const [imagePreviews, setImagePreviews] = useState([]);
+    const [emailExists, setEmailExists] = useState(false);
+
+    useEffect(() => {
+        if (isLoaded && user) {
+            const email = user.primaryEmailAddress?.emailAddress;
+
+            setProperty((prevProperty) => ({
+                ...prevProperty,
+                email: email, // Set email in the form
+            }));
+
+            // Check if email exists in either properties or mates collections
+            const checkEmailExists = async () => {
+                try {
+                    const matesResponse = await axios.get(`http://localhost:2000/mates/allmates`, {
+                        params: { email }
+                    });
+                    const propertiesResponse = await axios.get(`http://localhost:2000/property/allproperties`, {
+                        params: { email }
+                    });
+
+                    if (matesResponse.data.length > 0 || propertiesResponse.data.length > 0) {
+                        setEmailExists(true); // Email found in either collection
+                    }
+                } catch (error) {
+                    console.error('Error checking email existence:', error);
+                }
+            };
+            checkEmailExists();
+        }
+    }, [user]);
 
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);
+        // Update property state with the files in the selected order
         setProperty((prevProperty) => ({
             ...prevProperty,
-            images: files,
+            images: files, // Directly set the files array
         }));
-
-        // Generate previews for the images
+    
+        // Generate previews for the images in the selected order
         const previews = files.map((file) => URL.createObjectURL(file));
-        setImagePreviews(previews);
+        setImagePreviews(previews); // Set previews without reversing
     };
+    
+    
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -62,33 +98,44 @@ const AddProperty = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+    
+        if (emailExists) {
+            alert("Please delete your previous data from the account section.");
+            return;
+        }
+    
+        // Prepare to upload images while maintaining their order
         const uploadPromises = property.images.map(async (file) => {
             const storageRef = ref(storage, `images/${file.name}`);
             await uploadBytes(storageRef, file);
             const url = await getDownloadURL(storageRef);
             return url;
         });
-
+    
         try {
             const imageUrls = await Promise.all(uploadPromises);
             const propertyWithUrls = {
                 ...property,
-                images: imageUrls, // Replace images with the URLs
+                images: imageUrls, 
             };
-
-            // Send data to your backend
+    
             const response = await axios.post('http://localhost:2000/property/add', propertyWithUrls);
-            console.log('Property uploaded:', response.data);
+            if (response.status === 200) alert('Added');
+            console.log('Property uploaded: ', response.data);
         } catch (error) {
             console.error("Error uploading images: ", error);
         }
     };
 
+    if (!user) return <div className="text-white text-center mt-5">Please Sign In to continue.</div>;
+
     return (
         <div className='max-w-md mx-auto mt-10'>
             <h1 className='text-3xl font-bold text-white'>Add Property Details</h1>
-            <form onSubmit={handleSubmit}>
+            {emailExists ? (
+                <p className="text-white">Please delete your previous data from account section.</p>
+            ) : (
+                <form onSubmit={handleSubmit}>
                 {/* Image Input */}
                 <div className="relative z-0 w-full mb-5 mt-10 group">
                     <input
@@ -118,7 +165,7 @@ const AddProperty = () => {
                         </div>
                     )}
                 </div>
-
+                
                 {/* Name */}
                 <div className="relative z-0 w-full mb-5 group">
                     <input
@@ -362,6 +409,7 @@ const AddProperty = () => {
                             required
                             value={property.email}
                             onChange={handleChange}
+                            readOnly
                         />
                         <label
                             htmlFor="email"
@@ -468,6 +516,8 @@ const AddProperty = () => {
                     Submit
                 </button>
             </form>
+            )}
+            
         </div>
     );
 };

@@ -22,7 +22,7 @@ const HomeSection = () => {
     <div className='mt-10'>
       <h1 className='text-2xl font-bold py-5'>Mates</h1>
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
-        {profiles.map(profile => (
+        {profiles.slice(0, 6).map(profile => ( // Show only the first 6 profiles
           <Card 
             id={profile.userId} // Make sure to use userId here
             key={profile.userId} // Make sure to use userId here

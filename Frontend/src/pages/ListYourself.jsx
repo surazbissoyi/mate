@@ -1,7 +1,8 @@
 import { initializeApp } from "firebase/app";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useUser } from '@clerk/clerk-react';
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -18,7 +19,7 @@ const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
 const ListYourself = () => {
-  
+  const { isLoaded, user: currentUser } = useUser();
   const [user, setUser] = useState({
     name: '',
     budget: '',
@@ -35,6 +36,39 @@ const ListYourself = () => {
     gender: 'Male',
     preferred_gender: 'female',
   });
+
+  const [emailExists, setEmailExists] = useState(false);
+
+  useEffect(() => {
+    if (isLoaded && currentUser) {
+      const email = currentUser.primaryEmailAddress?.emailAddress;
+
+      setUser((prevUser) => ({
+        ...prevUser,
+        email: email, // Set email in the form
+      }));
+
+      // Check if email exists in either properties or mates collections
+      const checkEmailExists = async () => {
+        try {
+          // Replace userEmail with email
+          const matesResponse = await axios.get(`http://localhost:2000/mates/allmates`, {
+            params: { email }
+          });
+          const propertiesResponse = await axios.get(`http://localhost:2000/property/allproperties`, {
+            params: { email }
+          });
+
+          if (matesResponse.data.length > 0 || propertiesResponse.data.length > 0) {
+            setEmailExists(true); // Email found in either collection
+          }
+        } catch (error) {
+          console.error('Error checking email existence:', error);
+        }
+      };
+      checkEmailExists();
+    }
+  }, [currentUser]);
 
   const [imagePreview, setImagePreview] = useState(null);
   const [isUploading, setIsUploading] = useState(false); // New state for upload status
@@ -60,6 +94,12 @@ const ListYourself = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (emailExists) {
+      alert("Please delete your previous data from the account section.");
+      return;
+    }
+
     setIsUploading(true); // Set uploading to true
 
     if (user.image) {
@@ -93,10 +133,15 @@ const ListYourself = () => {
     }
   };
 
+  if (!currentUser) return <div className="text-white text-center mt-5">Please Sign In to continue.</div>;
+
   return (
     <div className='max-w-md mx-auto mt-10'>
       <h1 className='text-3xl font-bold text-white'>Add Details</h1>
-      <form onSubmit={handleSubmit}>
+      {emailExists ? (
+        <p className="text-white">Please delete your previous data from account section.</p>
+      ) : (
+        <form onSubmit={handleSubmit}>
         <div className="relative z-0 w-full mb-5 mt-10 group">
           <input
             type="file"
@@ -286,6 +331,7 @@ const ListYourself = () => {
               required
               value={user.email}
               onChange={handleChange}
+              readOnly
             />
             <label
               htmlFor="floating_email"
@@ -388,6 +434,8 @@ const ListYourself = () => {
           {isUploading ? 'Uploading...' : 'Submit'} {/* Change button text based on upload status */}
         </button>
       </form>
+      )}
+      
     </div>
   );
 };

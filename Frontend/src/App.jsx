@@ -9,6 +9,7 @@ import ProfileDetails from './pages/ProfileDetails';
 import ListYourself from './pages/ListYourself';
 import AddProperty from './pages/AddProperty';
 import SearchResults from './pages/SearchResults';
+import Account from './pages/Account';
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
           <Route path="/listyourself" element={<ListYourself />} />
           <Route path="/listproperty" element={<AddProperty />} />
           <Route path="/search-results" element={<SearchResults />} />
+          <Route path='/account' element={<Account/>}/>
         </Routes>
         <Footer />
       </main>

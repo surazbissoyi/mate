@@ -26,17 +26,42 @@ router.post('/add', async (req, res) => {
     }
 });
 
-// GET method to fetch all mates
-router.get('/allmates', async (req, res) => {
-    const { place } = req.query; // Get the place from query
+router.post('/bulk-add', async (req, res) => {
+    const matesData = req.body;
+
     try {
-        const mates = await Mate.find(place ? { place: { $regex: place, $options: 'i' } } : {}).exec(); // Filter by place
+        const results = await Mate.insertMany(matesData);
+        res.status(201).json(results); // Return the added mates
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error adding mates' });
+    }
+});
+
+
+
+router.get('/allmates', async (req, res) => {
+    const { place, email } = req.query; // Get the place and email from query
+
+    try {
+        const query = {};
+        
+        if (place) {
+            query.place = { $regex: place, $options: 'i' }; // Case-insensitive place filter
+        }
+        
+        if (email) {
+            query.email = email; // Exact email match
+        }
+
+        const mates = await Mate.find(query).exec(); // Filter by place and/or email
         res.status(200).json(mates);
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error fetching user data' });
     }
 });
+
 
 // GET method to fetch mate by ID
 router.get('/:id', async (req, res) => {
@@ -50,6 +75,22 @@ router.get('/:id', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error fetching mate data' });
+    }
+});
+
+router.delete('/delete/:id', async (req, res) => {
+    const { id } = req.params; // Get the userId from the URL parameters
+    try {
+        const mate = await Mate.findOneAndDelete({ userId: id }).exec(); // Find and delete the mate by userId
+
+        if (!mate) {
+            return res.status(404).json({ message: 'Mate not found' }); // Not Found status code
+        }
+
+        res.status(200).json({ message: 'Mate deleted successfully' }); // Return success message
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error deleting mate' }); // Internal Server Error
     }
 });
 
