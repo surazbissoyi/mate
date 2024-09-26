@@ -279,6 +279,7 @@ const AddProperty = () => {
                             name="property_type"
                             value={property.property_type}
                             onChange={handleChange}
+                            required
                             className="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-white peer"
                         >
                             <option className='bg-black' value="Apartment">Apartment</option>
@@ -299,6 +300,7 @@ const AddProperty = () => {
                             name="furnishing"
                             value={property.furnishing}
                             onChange={handleChange}
+                            required
                             className="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-white peer"
                         >
                             <option className='bg-black' value="Fully Furnished">Fully Furnished</option>
@@ -346,6 +348,7 @@ const AddProperty = () => {
                         placeholder=" "
                         value={property.about_room}
                         onChange={handleChange}
+                        required
                     />
                     <label
                         htmlFor="about_room"
@@ -364,6 +367,7 @@ const AddProperty = () => {
                         placeholder=" "
                         value={property.about_mates}
                         onChange={handleChange}
+                        required
                     />
                     <label
                         htmlFor="about_mates"
@@ -472,6 +476,7 @@ const AddProperty = () => {
                             name="gender"
                             value={property.gender}
                             onChange={handleChange}
+                            required
                             className="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-white peer"
                         >
                             <option className='bg-black' value="Male">Male</option>
@@ -492,6 +497,7 @@ const AddProperty = () => {
                             name="preferred_gender"
                             value={property.preferred_gender}
                             onChange={handleChange}
+                            required
                             className="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-white peer"
                         >
                             <option className='bg-black' value="Male">Male</option>

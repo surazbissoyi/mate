@@ -43,11 +43,10 @@ const Footer = () => {
                     </div>
                 </div>
                 <div className="flex mt-4 mb-4  md:mt-0">
-                    <a href="#" className="text-white mr-4 text-xl hover:text-teal-400"><i className="fab fa-instagram"></i></a>
-                    <a href="#" className="text-white mr-4 text-xl hover:text-teal-400"><i className="fab fa-youtube"></i></a>
+                    <a href="https://instagram.com/suraz_bissoyi" className="text-white mr-4 text-xl hover:text-teal-400"><i className="fab fa-instagram"></i></a>
+                    <a href="https://linkedin.com/in/surazbissoyi/" className="text-white text-xl mr-4 hover:text-teal-400"><i className="fab fa-linkedin"></i></a>
                     <a href="#" className="text-white mr-4 text-xl hover:text-teal-400"><i className="fab fa-twitter"></i></a>
-                    <a href="#" className="text-white mr-4 text-xl hover:text-teal-400"><i className="fab fa-facebook"></i></a>
-                    <a href="#" className="text-white text-xl hover:text-teal-400"><i className="fab fa-linkedin"></i></a>
+                    <a href="#" className="text-white text-xl hover:text-teal-400"><i className="fab fa-facebook"></i></a>
                 </div>
             </div>
             <div className="mt-2 border-t border-gray-700 pt-4 text-center">

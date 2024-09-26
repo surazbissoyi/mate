@@ -34,7 +34,7 @@ const ListYourself = () => {
     instagram: '',
     linkedin: '',
     gender: 'Male',
-    preferred_gender: 'female',
+    preferred_gender: 'Female',
   });
 
   const [emailExists, setEmailExists] = useState(false);
@@ -215,6 +215,7 @@ const ListYourself = () => {
               placeholder=" "
               value={user.place}
               onChange={handleChange}
+              required
             />
             <label
               htmlFor="floating_place"
@@ -252,6 +253,7 @@ const ListYourself = () => {
               className="block py-2.5 px-0 w-full text-sm text-white bg-transparent border-0 border-b-2 border-gray-300 appearance-none focus:outline-none focus:ring-0 focus:border-white peer"
               placeholder=" "
               value={user.habits}
+              required
               onChange={(e) => handleChange({ target: { name: 'habits', value: e.target.value.split(',') } })}
             />
             <label
@@ -271,6 +273,7 @@ const ListYourself = () => {
               placeholder=" "
               value={user.occupation}
               onChange={handleChange}
+              required
             />
             <label
               htmlFor="floating_occupation"
@@ -289,6 +292,7 @@ const ListYourself = () => {
             placeholder=" "
             value={user.about}
             onChange={handleChange}
+            required
           />
           <label
             htmlFor="floating_about"
