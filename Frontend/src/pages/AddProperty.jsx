@@ -42,6 +42,7 @@ const AddProperty = () => {
 
     const [imagePreviews, setImagePreviews] = useState([]);
     const [emailExists, setEmailExists] = useState(false);
+    const [isUploading, setIsUploading] = useState(false)
 
     useEffect(() => {
         if (isLoaded && user) {
@@ -103,6 +104,8 @@ const AddProperty = () => {
             alert("Please delete your previous data from the account section.");
             return;
         }
+
+        setIsUploading(true);
     
         // Prepare to upload images while maintaining their order
         const uploadPromises = property.images.map(async (file) => {
@@ -120,10 +123,15 @@ const AddProperty = () => {
             };
     
             const response = await axios.post('https://matebackend.vercel.app/property/add', propertyWithUrls);
-            if (response.status === 200) alert('Added');
+            if (response.status === 201) {
+                alert('Added');
+                window.location.reload();
+            }
             console.log('Property uploaded: ', response.data);
         } catch (error) {
             console.error("Error uploading images: ", error);
+        } finally {
+            setIsUploading(false);
         }
     };
 
@@ -518,8 +526,9 @@ const AddProperty = () => {
                 <button
                     type="submit"
                     className="w-full bg-gradient-to-r from-teal-400 to-teal-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    disabled={isUploading}
                 >
-                    Submit
+                    {isUploading ? 'Uploading...' : 'Submit'}
                 </button>
             </form>
             )}

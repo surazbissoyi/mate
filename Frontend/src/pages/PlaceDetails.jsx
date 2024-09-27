@@ -211,7 +211,7 @@ const PlaceDetails = () => {
               {isPaidUser ? (
                 <button
                   onClick={() => setShowContact(!showContact)}
-                  className="mt-4 bg-gradient-to-r from-teal-500 to-teal-700 text-white rounded-lg w-full transition-colors duration-300 hover:from-teal-600 hover:to-teal-800 font-semibold py-2 px-4 rounded"
+                  className="mt-4 bg-gradient-to-r from-teal-500 to-teal-700 text-white w-full transition-colors duration-300 hover:from-teal-600 hover:to-teal-800 font-semibold py-2 px-4 rounded"
                 >
                   {showContact ? 'Hide Contact Details' : 'Show Contact Details'}
                 </button>

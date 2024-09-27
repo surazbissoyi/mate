@@ -120,6 +120,7 @@ const ListYourself = () => {
           alert(response.data.message); // Alert the user
         } else {
           console.log('User data uploaded:', response.data);
+          window.location.reload();
           // Reset form or take other actions after successful upload
         }
       } catch (error) {
@@ -133,13 +134,13 @@ const ListYourself = () => {
     }
   };
 
-  if (!currentUser) return <div className="text-white text-center mt-5">Please Sign In to continue.</div>;
+  if (!currentUser) return <div className="text-white text-center mt-5 mb-[400px]">Please Sign In to continue.</div>;
 
   return (
     <div className='max-w-md mx-4 sm:mx-auto mt-10'>
       <h1 className='text-3xl font-bold text-white'>Add Details</h1>
       {emailExists ? (
-        <p className="text-white">Please delete your previous data from account section.</p>
+        <p className="text-white mb-[400px]">Please delete your previous data from account section.</p>
       ) : (
         <form onSubmit={handleSubmit}>
         <div className="relative z-0 w-full mb-5 mt-10 group">

@@ -6,7 +6,7 @@ const Footer = () => {
         <footer className="bg-black text-white py-10 pt-10 mt-20">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between">
                 <div className="mb-8 md:mb-[200px] flex items-center space-x-1 mr-[100px]">
-                    <h2 className="text-white hover:text-teal-400 text-lg font-semibold">Mate</h2>
+                    <h2 className="text-white hover:text-teal-400 text-lg font-semibold"><a href="/">Mate</a></h2>
                 </div>
 
                 <div className="flex flex-wrap justify-between flex-grow">
