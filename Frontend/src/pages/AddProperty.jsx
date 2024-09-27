@@ -55,10 +55,10 @@ const AddProperty = () => {
             // Check if email exists in either properties or mates collections
             const checkEmailExists = async () => {
                 try {
-                    const matesResponse = await axios.get(`http://localhost:2000/mates/allmates`, {
+                    const matesResponse = await axios.get(`https://matebackend.vercel.app/mates/allmates`, {
                         params: { email }
                     });
-                    const propertiesResponse = await axios.get(`http://localhost:2000/property/allproperties`, {
+                    const propertiesResponse = await axios.get(`https://matebackend.vercel.app/property/allproperties`, {
                         params: { email }
                     });
 
@@ -119,7 +119,7 @@ const AddProperty = () => {
                 images: imageUrls, 
             };
     
-            const response = await axios.post('http://localhost:2000/property/add', propertyWithUrls);
+            const response = await axios.post('https://matebackend.vercel.app/property/add', propertyWithUrls);
             if (response.status === 200) alert('Added');
             console.log('Property uploaded: ', response.data);
         } catch (error) {

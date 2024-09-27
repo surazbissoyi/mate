@@ -11,10 +11,10 @@ const Navbar = () => {
     const handleSearch = async () => {
         if (searchQuery.trim()) {
             try {
-                const matesResponse = await fetch(`http://localhost:2000/mates/allmates?place=${searchQuery}`);
+                const matesResponse = await fetch(`https://matebackend.vercel.app/mates/allmates?place=${searchQuery}`);
                 const matesData = await matesResponse.json();
     
-                const propertiesResponse = await fetch(`http://localhost:2000/property/allproperties?place=${searchQuery}`);
+                const propertiesResponse = await fetch(`https://matebackend.vercel.app/property/allproperties?place=${searchQuery}`);
                 const propertiesData = await propertiesResponse.json();
     
                 // Combine results
@@ -37,7 +37,7 @@ const Navbar = () => {
         <div className='bg-black bg-opacity-90 backdrop-blur-md text-white h-[70px] shadow-lg sticky top-0 z-10'>
             <div className='flex items-center container px-4 sm:mx-auto py-4 justify-between'>
                 {/* Logo Section */}
-                <div className='text-2xl font-bold'>
+                <div className='text-2xl font-bold hidden sm:block'>
                     <a href="/" className='hover:text-teal-400 transition duration-300'>Mate</a>
                 </div>
                 

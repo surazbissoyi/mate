@@ -14,7 +14,7 @@ const Account = () => {
 
             const fetchUserData = async () => {
                 try {
-                    const mateResponse = await fetch(`http://localhost:2000/mates/allmates?email=${userEmail}`);
+                    const mateResponse = await fetch(`https://matebackend.vercel.app/mates/allmates?email=${userEmail}`);
                     const mateData = await mateResponse.json();
 
                     if (mateData && mateData.length > 0) {
@@ -23,7 +23,7 @@ const Account = () => {
                         console.log('No mate data found for this email');
                     }
 
-                    const propertyResponse = await fetch(`http://localhost:2000/property/allproperties?email=${userEmail}`);
+                    const propertyResponse = await fetch(`https://matebackend.vercel.app/property/allproperties?email=${userEmail}`);
                     const propertyData = await propertyResponse.json();
                     setProperties(propertyData);
                 } catch (err) {
@@ -38,7 +38,7 @@ const Account = () => {
     const handleDeleteMate = async () => {
         if (userData) {
             try {
-                const response = await fetch(`http://localhost:2000/mates/delete/${userData.userId}`, {
+                const response = await fetch(`https://matebackend.vercel.app/mates/delete/${userData.userId}`, {
                     method: 'DELETE'
                 });
 
@@ -56,7 +56,7 @@ const Account = () => {
 
     const handleDeleteProperty = async (propertyId) => {
         try {
-            const response = await fetch(`http://localhost:2000/property/delete/${propertyId}`, {
+            const response = await fetch(`https://matebackend.vercel.app/property/delete/${propertyId}`, {
                 method: 'DELETE'
             });
 

@@ -13,7 +13,7 @@ const PlaceDetails = () => {
   useEffect(() => {
     const fetchPlaceDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:2000/property/property/${id}`);
+        const response = await axios.get(`https://matebackend.vercel.app/property/property/${id}`);
         setPlaceDetails(response.data);
       } catch (error) {
         console.error('Error fetching place details:', error);
@@ -85,11 +85,11 @@ const PlaceDetails = () => {
                   <tbody>
                     <tr>
                       <td className="pr-3 sm:pr-20 py-2">Rent</td>
-                      <td className="pr-3 sm:pr-20 py-2">₹{placeDetails.rent}</td>
+                      <td className="pr-3 sm:pr-20 py-2">{placeDetails.rent}</td>
                     </tr>
                     <tr>
                       <td className="pr-3 sm:pr-20 py-2">Security Deposit</td>
-                      <td className="pr-3 sm:pr-20 py-2">₹{placeDetails.security_deposit}</td>
+                      <td className="pr-3 sm:pr-20 py-2">{placeDetails.security_deposit}</td>
                     </tr>
                     <tr>
                       <td className="pr-3 sm:pr-20 py-2">Property Type</td>

@@ -52,10 +52,10 @@ const ListYourself = () => {
       const checkEmailExists = async () => {
         try {
           // Replace userEmail with email
-          const matesResponse = await axios.get(`http://localhost:2000/mates/allmates`, {
+          const matesResponse = await axios.get(`https://matebackend.vercel.app/mates/allmates`, {
             params: { email }
           });
-          const propertiesResponse = await axios.get(`http://localhost:2000/property/allproperties`, {
+          const propertiesResponse = await axios.get(`https://matebackend.vercel.app/property/allproperties`, {
             params: { email }
           });
 
@@ -113,7 +113,7 @@ const ListYourself = () => {
           image: imageUrl,
         };
 
-        const response = await axios.post('http://localhost:2000/mates/add', userWithImage);
+        const response = await axios.post('https://matebackend.vercel.app/mates/add', userWithImage);
 
         // Check if the response indicates user already exists
         if (response.status === 409) {

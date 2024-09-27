@@ -7,7 +7,7 @@ const PlaceCard = ({ name, images, place, budget, rent, securityDeposit, propert
   // Helper function to truncate combined string
   const getCombinedPropertyString = (propertyType, furnishing) => {
     const combined = `${propertyType || ''} ・ ${furnishing || ''}`;
-    return combined.length > 24 ? combined.substring(0, 24) + '...' : combined;
+    return combined.length > 17 ? combined.substring(0, 14) + '...' : combined;
   };
 
   const navigate = useNavigate();
@@ -38,8 +38,8 @@ const PlaceCard = ({ name, images, place, budget, rent, securityDeposit, propert
       {/* Details on the right */}
       <div className='w-1/2 pr-3'>
         <div className='justify-between items-center'>
-          <h2 className='text-xl font-bold'>{name ? (name.length < 15 ? name : name.substring(0, 14) + '...') : 'N/A'}</h2>
-          <h2 className='text-lg font-semibold'>₹{rent || 'N/A'}</h2>
+          <h2 className='text-xl font-bold'>{name ? (name.length < 13 ? name : name.substring(0, 10) + '...') : 'N/A'}</h2>
+          <h2 className='text-lg font-semibold'>{rent || 'N/A'}</h2>
         </div>
 
         <p className='text-gray-300 text-sm font-medium capitalize'>

@@ -8,7 +8,7 @@ const Places = () => {
   useEffect(() => {
     const fetchProfiles = async () => {
       try {
-        const response = await axios.get('http://localhost:2000/property/allproperties'); // Fetch all properties
+        const response = await axios.get('https://matebackend.vercel.app/property/allproperties'); // Fetch all properties
         setProfiles(response.data.reverse()); // Reverse the array to show last added first
       } catch (error) {
         console.error('Error fetching places:', error);

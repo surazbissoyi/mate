@@ -10,7 +10,7 @@ const ProfileDetails = () => {
     useEffect(() => {
         const fetchProfileData = async () => {
             try {
-                const response = await fetch(`http://localhost:2000/mates/${id}`);
+                const response = await fetch(`https://matebackend.vercel.app/mates/${id}`);
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }

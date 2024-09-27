@@ -8,7 +8,7 @@ const HomeSection = () => {
   useEffect(() => {
     const fetchProfiles = async () => {
       try {
-        const response = await axios.get('http://localhost:2000/mates/allmates'); // Fetch all mates
+        const response = await axios.get('https://matebackend.vercel.app/mates/allmates'); // Fetch all mates
         setProfiles(response.data.reverse()); // Reverse the array to show last added first
       } catch (error) {
         console.error('Error fetching profiles:', error); // Handle errors
