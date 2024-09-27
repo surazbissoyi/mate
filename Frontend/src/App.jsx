@@ -10,6 +10,7 @@ import ListYourself from './pages/ListYourself';
 import AddProperty from './pages/AddProperty';
 import SearchResults from './pages/SearchResults';
 import Account from './pages/Account';
+import Pricing from './pages/Pricing';
 
 export default function App() {
   return (
@@ -24,6 +25,7 @@ export default function App() {
           <Route path="/listproperty" element={<AddProperty />} />
           <Route path="/search-results" element={<SearchResults />} />
           <Route path='/account' element={<Account/>}/>
+          <Route path='/pricing' element={<Pricing/>}/>
         </Routes>
         <Footer />
       </main>

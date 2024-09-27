@@ -5,6 +5,8 @@ const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const propertyRoutes = require('./routes/propertyRoutes');
 const mateRoutes = require('./routes/mateRoutes');
+const paidUserRoutes = require('./routes/paidUserRoutes');
+const razorpayRoutes = require('./routes/razorpayRoutes');
 
 
 const app = express();
@@ -24,6 +26,8 @@ app.get('/', (req, res) => {
 
 app.use('/property', propertyRoutes);
 app.use('/mates', mateRoutes);
+app.use('/paiduser', paidUserRoutes);
+app.use('/payment', razorpayRoutes)
 
 const PORT = process.env.PORT || 3000;
 

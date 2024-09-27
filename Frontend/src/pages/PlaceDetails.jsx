@@ -1,15 +1,47 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { useUser } from '@clerk/clerk-react'; // Clerk import for user authentication
 import ImageSlider from '../components/Common/ImageSlider';
 
 const PlaceDetails = () => {
   const { id } = useParams();
+  const { user } = useUser(); // Clerk hook to get the authenticated user
   const [placeDetails, setPlaceDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState('room'); // Added activeTab state
+  const [activeTab, setActiveTab] = useState('room');
+  const [isPaidUser, setIsPaidUser] = useState(false); // State to check if the user is paid
+  const [userEmail, setUserEmail] = useState(''); // Store user's email
+  const [showContact, setShowContact] = useState(false); // State to toggle contact details visibility
 
+  // Fetch user email from Clerk
+  useEffect(() => {
+    if (user) {
+      setUserEmail(user.primaryEmailAddress?.emailAddress);
+    }
+  }, [user]);
+
+  // Function to check if the user is paid
+  useEffect(() => {
+    const checkPaidUser = async () => {
+      if (userEmail) {
+        try {
+          const response = await axios.get(`https://matebackend.vercel.app/paiduser/${userEmail}`);
+          if (response.status === 200) {
+            setIsPaidUser(true);
+          }
+        } catch (err) {
+          console.error('Error checking paid user status:', err);
+          setIsPaidUser(false);
+        }
+      }
+    };
+
+    checkPaidUser();
+  }, [userEmail]);
+
+  // Fetch place details
   useEffect(() => {
     const fetchPlaceDetails = async () => {
       try {
@@ -26,8 +58,17 @@ const PlaceDetails = () => {
     fetchPlaceDetails();
   }, [id]);
 
+  const maskContact = (contact) => {
+    return contact.slice(0, -4) + 'XXXX'; // Mask last 4 digits
+  };
+
+  const maskEmail = (email) => {
+    const [name, domain] = email.split('@');
+    return name.slice(0, -4) + 'xxxx@' + domain; // Mask last 4 characters before '@'
+  };
+
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className='mt-5 text-center text-white'>Loading...</div>;
   }
 
   if (error) {
@@ -142,23 +183,42 @@ const PlaceDetails = () => {
                   <tbody>
                     <tr>
                       <td className="pr-3 sm:pr-20 py-2">Phone</td>
-                      <td className="pr-3 sm:pr-20 py-2">{placeDetails.contact_no}</td>
+                      <td className="pr-3 sm:pr-20 py-2">
+                        {showContact ? placeDetails.contact_no : maskContact(placeDetails.contact_no)}
+                      </td>
                     </tr>
                     <tr>
                       <td className="pr-3 sm:pr-20 py-2">Email</td>
-                      <td className="pr-3 sm:pr-20 py-2">{placeDetails.email}</td>
+                      <td className="pr-3 sm:pr-20 py-2">
+                        {showContact ? placeDetails.email : maskEmail(placeDetails.email)}
+                      </td>
                     </tr>
                     <tr>
                       <td className="pr-3 sm:pr-20 py-2">Instagram</td>
-                      <td className="pr-3 sm:pr-20 py-2">@{placeDetails.instagram}</td>
+                      <td className="pr-3 sm:pr-20 py-2">
+                        {showContact ? `@${placeDetails.instagram}` : '@xxxxxx'}
+                      </td>
                     </tr>
                     <tr>
                       <td className="pr-3 sm:pr-20 py-2">LinkedIn</td>
-                      <td className="pr-3 sm:pr-20 py-2">@{placeDetails.linkedin}</td>
+                      <td className="pr-3 sm:pr-20 py-2">
+                        {showContact ? `@${placeDetails.linkedin}` : '@xxxxxx'}
+                      </td>
                     </tr>
                   </tbody>
                 </table>
               </div>
+              {isPaidUser ? (
+                <button
+                  onClick={() => setShowContact(!showContact)}
+                  className="mt-4 bg-gradient-to-r from-teal-500 to-teal-700 text-white rounded-lg w-full transition-colors duration-300 hover:from-teal-600 hover:to-teal-800 font-semibold py-2 px-4 rounded"
+                >
+                  {showContact ? 'Hide Contact Details' : 'Show Contact Details'}
+                </button>
+              ) : (
+                <div className="mt-4 text-gray-200">Subscribe to view contact details</div>
+              )}
+
             </>
           )}
         </div>

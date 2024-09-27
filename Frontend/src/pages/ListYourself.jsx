@@ -136,7 +136,7 @@ const ListYourself = () => {
   if (!currentUser) return <div className="text-white text-center mt-5">Please Sign In to continue.</div>;
 
   return (
-    <div className='max-w-md mx-auto mt-10'>
+    <div className='max-w-md mx-4 sm:mx-auto mt-10'>
       <h1 className='text-3xl font-bold text-white'>Add Details</h1>
       {emailExists ? (
         <p className="text-white">Please delete your previous data from account section.</p>

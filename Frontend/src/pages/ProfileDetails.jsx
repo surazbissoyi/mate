@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useUser } from '@clerk/clerk-react'; // Import Clerk authentication hook
 
 const ProfileDetails = () => {
     const { id } = useParams();
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('about');
+    const [showContact, setShowContact] = useState(false); // State to toggle contact visibility
+    const [isPaidUser, setIsPaidUser] = useState(false); // State to check if user is a paid user
+    const { user: currentUser } = useUser(); // Get user information from Clerk
 
     useEffect(() => {
         const fetchProfileData = async () => {
@@ -23,15 +27,45 @@ const ProfileDetails = () => {
             }
         };
 
+        const checkPaidUser = async (email) => {
+            try {
+                const response = await fetch(`https://matebackend.vercel.app/paiduser/${email}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.user) {
+                        setIsPaidUser(true);
+                    }
+                }
+            } catch (error) {
+                console.error('Failed to check paid user:', error);
+            }
+        };
+
+        if (currentUser) {
+            const email = currentUser.primaryEmailAddress?.emailAddress; // Get the user's email
+            if (email) {
+                checkPaidUser(email); // Check if the logged-in user is a paid user
+            }
+        }
+
         fetchProfileData();
-    }, [id]);
+    }, [id, currentUser]);
+
+    const maskContact = (contact) => {
+        return contact.slice(0, 6) + 'XXXX'; // Mask last 4 digits
+    };
+
+    const maskEmail = (email) => {
+        const [name, domain] = email.split('@');
+        return name.slice(0, -4) + 'xxxx@' + domain;
+    };
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <div className='mt-4 text-center text-white'>Loading...</div>;
     }
 
     if (!profile) {
-        return <div>Profile not found</div>;
+        return <div className='mt-4 text-center text-white'>Profile not found</div>;
     }
 
     return (
@@ -67,7 +101,6 @@ const ProfileDetails = () => {
                                 Contact Details
                             </button>
                         </li>
-
                     </ul>
                 </div>
 
@@ -89,23 +122,41 @@ const ProfileDetails = () => {
                                     <tbody>
                                         <tr>
                                             <td className="pr-3 sm:pr-20 py-2">Phone</td>
-                                            <td className="pr-3 sm:pr-20 py-2">{profile.contact_no}</td>
+                                            <td className="pr-3 sm:pr-20 py-2">
+                                                {showContact ? profile.contact_no : maskContact(profile.contact_no)}
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td className="pr-3 sm:pr-20 py-2">Email</td>
-                                            <td className="pr-3 sm:pr-20 py-2">{profile.email}</td>
+                                            <td className="pr-3 sm:pr-20 py-2">
+                                                {showContact ? profile.email : maskEmail(profile.email)}
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td className="pr-3 sm:pr-20 py-2">Instagram</td>
-                                            <td className="pr-3 sm:pr-20 py-2">@{profile.instagram}</td>
+                                            <td className="pr-3 sm:pr-20 py-2">
+                                                {showContact ? `@${profile.instagram}` : '@xxxxxx'}
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td className="pr-3 sm:pr-20 py-2">LinkedIn</td>
-                                            <td className="pr-3 sm:pr-20 py-2">@{profile.linkedin}</td>
+                                            <td className="pr-3 sm:pr-20 py-2">
+                                                {showContact ? `@${profile.linkedin}` : '@xxxxxx'}
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
+                            {isPaidUser ? (
+                                <button
+                                    onClick={() => setShowContact(!showContact)}
+                                    className="mt-4 bg-gradient-to-r from-teal-500 to-teal-700 text-white rounded-lg w-full transition-colors duration-300 hover:from-teal-600 hover:to-teal-800 font-semibold py-2 px-4 rounded"
+                                >
+                                    {showContact ? 'Hide Contact Details' : 'Show Contact Details'}
+                                </button>
+                            ) : (
+                                <div className="mt-4 text-gray-200">Subscribe to view contact details</div>
+                            )}
                         </>
                     )}
 
